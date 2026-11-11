@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Lumen</title>
+    <link rel="stylesheet" href="system.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav container">
+            <div class="nav__logo">Lumen · Admin</div>
+            <div class="nav__links" id="navLinks">
+                <a href="#" class="nav__link" data-view="dashboard">Dashboard</a>
+                <a href="#" class="nav__link" data-view="campaigns">Campaigns</a>
+                <a href="#" class="nav__link" data-view="leads">Leads</a>
+            </div>
+            <a href="index.html" class="nav__link btn--ghost">View site</a>
+            <button class="btn btn--outline nav__cta" id="adminSignout">Sign out</button>
+            <button class="nav__toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+        </nav>
+    </header>
+
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar__brand">Lumen</div>
+            <nav class="sidebar__nav">
+                <a href="#" class="sidebar__link sidebar__link--active" data-view="dashboard">Dashboard</a>
+                <a href="#" class="sidebar__link" data-view="campaigns">Campaigns</a>
+                <a href="#" class="sidebar__link" data-view="leads">Leads</a>
+            </nav>
+            <div class="sidebar__footer">
+                <button class="btn btn--outline btn--block btn--sm" id="adminSignoutSidebar">Sign out</button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="main__header">
+                <h1 class="main__title" id="pageTitle">Dashboard</h1>
+                <button class="btn btn--primary" id="addCampaignBtn">New campaign</button>
+            </header>
+
+            <section id="view-dashboard" class="view view--active">
+                <div class="stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px;">
+                    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 20px 18px;">
+                        <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-muted); margin-bottom: 6px;">Total campaigns</div>
+                        <div class="stat__number" id="stat-campaigns" style="font-size: 2rem; font-family: var(--font-serif); font-weight: 700;">-</div>
+                    </div>
+                    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 20px 18px;">
+                        <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-muted); margin-bottom: 6px;">Active</div>
+                        <div class="stat__number" id="stat-active" style="font-size: 2rem; font-family: var(--font-serif); font-weight: 700;">-</div>
+                    </div>
+                    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 20px 18px;">
+                        <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-muted); margin-bottom: 6px;">Total spend</div>
+                        <div class="stat__number" id="stat-spend" style="font-size: 2rem; font-family: var(--font-serif); font-weight: 700;">-</div>
+                    </div>
+                    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 20px 18px;">
+                        <div style="font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--color-muted); margin-bottom: 6px;">Total leads</div>
+                        <div class="stat__number" id="stat-leads" style="font-size: 2rem; font-family: var(--font-serif); font-weight: 700;">-</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 24px; display: flex; flex-direction: column;">
+                        <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 16px;">Recent campaigns</div>
+                        <table class="table" id="recentTable" style="font-size: 0.88rem;">
+                            <thead>
+                                <tr><th style="width: 40%;">Campaign</th><th style="width: 20%;">Status</th><th style="width: 20%;">Spend</th><th style="width: 20%;">Conversions</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); padding: 24px; display: flex; flex-direction: column;">
+                        <div style="font-size: 0.9rem; font-weight: 700; margin-bottom: 16px;">Recent leads</div>
+                        <table class="table" id="leadsTable" style="font-size: 0.88rem;">
+                            <thead>
+                                <tr><th style="width: 30%;">Name</th><th style="width: 35%;">Email</th><th style="width: 15%;">Plan</th><th style="width: 20%;">Status</th></tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-campaigns" class="view">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+                    <h2 class="section__title" style="font-size: 1.4rem;">Campaigns</h2>
+                    <select id="statusFilter" class="form__select" style="width: 200px;">
+                        <option value="">All status</option>
+                        <option value="active">Active</option>
+                        <option value="paused">Paused</option>
+                        <option value="draft">Draft</option>
+                    </select>
+                </div>
+                <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden;">
+                    <table class="table" id="campaignsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th><th>Status</th><th>Channel</th><th>Budget</th><th>Spend</th><th>Impressions</th><th>Clicks</th><th>Conversions</th><th style="width: 130px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="view-leads" class="view">
+                <h2 class="section__title" style="font-size: 1.4rem; margin-bottom: 24px;">All leads</h2>
+                <div style="background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-sm); overflow: hidden;">
+                    <table class="table" id="allLeadsTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th><th>Email</th><th>Company</th><th>Plan</th><th>Source</th><th>Status</th><th style="width: 140px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Campaign modal -->
+            <div id="campaignModal" class="modal" aria-hidden="true">
+                <div class="modal__overlay" id="modalClose"></div>
+                <div class="modal__card" style="max-width: 500px;">
+                    <div class="modal__header">
+                        <h2 class="modal__title" id="modalTitle">New campaign</h2>
+                        <button class="modal__close-btn" id="modalCancel">&times;</button>
+                    </div>
+                    <form id="campaignForm" class="modal__form">
+                        <div class="form__group">
+                            <label class="form__label">Campaign name</label>
+                            <input type="text" name="name" class="form__input" placeholder="Q4 Holiday Campaign" required>
+                        </div>
+                        <div class="form__row">
+                            <div class="form__group">
+                                <label class="form__label">Status</label>
+                                <select name="status" class="form__select">
+                                    <option value="draft">Draft</option>
+                                    <option value="active">Active</option>
+                                    <option value="paused">Paused</option>
+                                </select>
+                            </div>
+                            <div class="form__group">
+                                <label class="form__label">Channel</label>
+                                <select name="channel" class="form__select">
+                                    <option value="email">Email</option>
+                                    <option value="social">Social</option>
+                                    <option value="ads">Ads</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form__group">
+                            <label class="form__label">Budget ($)</label>
+                            <input type="number" name="budget" class="form__input" min="0" value="0">
+                        </div>
+                        <div class="modal__actions">
+                            <button type="button" class="btn btn--outline" id="modalCancelBtn">Cancel</button>
+                            <button type="submit" class="btn btn--primary" id="modalSave">Save campaign</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>
